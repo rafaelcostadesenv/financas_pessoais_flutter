@@ -10,3 +10,22 @@ Content-Type: application/json
     "nome": "DENTISTA"
 }
 
+###
+
+POST http://localhost:8080/categoria/delete
+Content-Type: application/json
+
+{
+    "id": 1
+}
+
+###
+
+POST http://localhost:8080/categoria/update
+Content-Type: application/json
+
+{
+    "id": 1,
+    "nome": "ODONTOLOGO"
+}
+

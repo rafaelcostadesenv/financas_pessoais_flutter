@@ -18,3 +18,30 @@ Content-Type: application/json
     "status": false
 }
 
+###
+
+POST http://localhost:8080/conta/delete
+Content-Type: application/json
+
+{
+    "id": 1
+}
+
+###
+
+POST http://localhost:8080/conta/update
+Content-Type: application/json
+
+{
+    "id": 1,
+    "categoria": {
+        "id": 1
+    },
+    "tipo": false,
+    "data": "2023-09-26",
+    "descricao": "Paracetamol",
+    "valor": 3.99,
+    "destinoOrigem": "Farmacia preco baixo",
+    "status": false
+}
+
