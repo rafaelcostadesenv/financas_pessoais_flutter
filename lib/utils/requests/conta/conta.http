@@ -8,7 +8,7 @@ Content-Type: application/json
 {
     "id": null,
     "categoria": {
-        "id": 1
+        "id": 2
     },
     "tipo": true,
     "data": "2023-09-26",
@@ -35,13 +35,13 @@ Content-Type: application/json
 {
     "id": 1,
     "categoria": {
-        "id": 1
+        "id": 2
     },
     "tipo": false,
     "data": "2023-09-26",
-    "descricao": "Paracetamol",
+    "descricao": "algodao",
     "valor": 3.99,
-    "destinoOrigem": "Farmacia preco baixo",
+    "destinoOrigem": "Farmacia",
     "status": false
 }
 

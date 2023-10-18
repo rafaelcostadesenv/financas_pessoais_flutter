@@ -13,12 +13,13 @@ class Categoria extends AbstractEntity {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'nome': nome,
+      'id': id,
     };
   }
 
   factory Categoria.fromMap(Map<String, dynamic> map) {
     return Categoria(
       nome: map['nome'] as String,
-    );
+    )..id = map['id'] as int;
   }
 }

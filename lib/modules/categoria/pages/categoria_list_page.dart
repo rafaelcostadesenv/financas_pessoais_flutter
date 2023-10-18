@@ -6,33 +6,19 @@ import 'package:provider/provider.dart';
 class CategoriaListPage extends StatelessWidget {
   CategoriaListPage({super.key});
 
-  // Future<List<Categoria>?> findAll() async {
-  //   var categoriaRepository = CategoriaRepository();
-  //   try {
-  //     final response = await categoriaRepository
-  //         .getAll(BackRoutes.baseUrl + BackRoutes.CATEGORIA_ALL);
-  //     if (response != null) {
-  //       List<Categoria> categorias =
-  //           response.map<Categoria>((e) => Categoria.fromMap(e)).toList();
-  //       return categorias;
-  //     }
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
-
-  save() {}
-
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<CategoriaController>(context);
+    // final controller = Provider.of<CategoriaController>(context);
+    final controller = context.watch<CategoriaController>();
+
+    // final controller = Provider.of<CategoriaController>(context, listen: false);
+    // final controller = context.read<CategoriaController>();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Categorias'),
       ),
-      body: Consumer<CategoriaController>(
-        builder: (context, controller, child) => FutureBuilder(
+      body: FutureBuilder(
           future: controller.findAll(),
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
@@ -43,6 +29,26 @@ class CategoriaListPage extends StatelessWidget {
                   itemBuilder: (ctx, index) => Card(
                     child: ListTile(
                       title: Text(data[index].nome),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () =>
+                                controller.edit(context, data[index]),
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.amber,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => controller.delete(data[index]),
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -56,12 +62,10 @@ class CategoriaListPage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
-          },
-        ),
-      ),
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () => controller.create(context),
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
