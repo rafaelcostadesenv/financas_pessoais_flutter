@@ -5,19 +5,6 @@ import 'package:financas_pessoais_flutter/utils/back_routes.dart';
 import 'package:flutter/material.dart';
 
 class CategoriaController extends ChangeNotifier {
-  // var categorias = [
-  //   Categoria(
-  //     nome: "FARMACIA",
-  //   ),
-  //   Categoria(
-  //     nome: "MERCADO",
-  //   ),
-  // ];
-
-  // Future<List<Categoria>> findAll() async {
-  //   return Future.delayed(const Duration(seconds: 1), () => categorias);
-  // }
-
   List<Categoria> categorias = [];
 
   Future<List<Categoria>?> findAll() async {
@@ -35,6 +22,7 @@ class CategoriaController extends ChangeNotifier {
     } catch (e) {
       log(e.toString());
     }
+    return null;
   }
 
   Future<void> save(Categoria categoria) async {
@@ -53,23 +41,24 @@ class CategoriaController extends ChangeNotifier {
   }
 
   create(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    final _nomeController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+    final nomeController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Nova Categoria'),
+        title: const Text('Nova Categoria'),
         content: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                controller: _nomeController,
+                controller: nomeController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Campo obrigatório';
                   }
+                  return null;
                 },
               ),
             ],
@@ -78,38 +67,39 @@ class CategoriaController extends ChangeNotifier {
         actions: [
           ElevatedButton.icon(
               onPressed: () async {
-                if (_formKey.currentState?.validate() ?? false) {
-                  var categoria = Categoria(nome: _nomeController.text);
+                if (formKey.currentState?.validate() ?? false) {
+                  var categoria = Categoria(nome: nomeController.text);
                   await save(categoria);
                   Navigator.of(context).pop();
                   notifyListeners();
                 }
               },
-              icon: Icon(Icons.save),
-              label: Text('Salvar'))
+              icon: const Icon(Icons.save),
+              label: const Text('Salvar'))
         ],
       ),
     );
   }
 
   edit(BuildContext context, Categoria data) {
-    final _formKey = GlobalKey<FormState>();
-    final _nomeController = TextEditingController(text: data.nome);
+    final formKey = GlobalKey<FormState>();
+    final nomeController = TextEditingController(text: data.nome);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Editar Categoria'),
+        title: const Text('Editar Categoria'),
         content: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                controller: _nomeController,
+                controller: nomeController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Campo obrigatório';
                   }
+                  return null;
                 },
               ),
             ],
@@ -118,15 +108,15 @@ class CategoriaController extends ChangeNotifier {
         actions: [
           ElevatedButton.icon(
               onPressed: () async {
-                if (_formKey.currentState?.validate() ?? false) {
-                  data.nome = _nomeController.text;
+                if (formKey.currentState?.validate() ?? false) {
+                  data.nome = nomeController.text;
                   await update(data);
                   Navigator.of(context).pop();
                   notifyListeners();
                 }
               },
-              icon: Icon(Icons.save),
-              label: Text('Salvar'))
+              icon: const Icon(Icons.save),
+              label: const Text('Salvar'))
         ],
       ),
     );
