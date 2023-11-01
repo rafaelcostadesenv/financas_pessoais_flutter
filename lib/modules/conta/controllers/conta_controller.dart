@@ -10,14 +10,21 @@ import 'package:provider/provider.dart';
 class ContaController extends ChangeNotifier {
   List<Conta> contas = [];
   Categoria? categoriaSelecionada;
-  bool? tipoSelecionado;
-  bool? statusSelecionado;
+  String tipoSelecionado = 'Despesa';
+  String statusSelecionado = 'TipoConta';
+  final categoriaController = TextEditingController();
+  final tipoController = TextEditingController();
+  final dataController = TextEditingController();
+  final descricaoController = TextEditingController();
+  final valorController = TextEditingController();
+  final destinoOrigemController = TextEditingController();
+  final statusController = TextEditingController();
 
   Future<List<Conta>?> findAll() async {
     var contaRepository = ContaRepository();
     try {
       final response = await contaRepository
-          .getAll(BackRoutes.baseUrl + BackRoutes.CATEGORIA_ALL);
+          .getAll(BackRoutes.baseUrl + BackRoutes.CONTA_ALL);
       if (response != null) {
         List<Conta> lista =
             response.map<Conta>((e) => Conta.fromMap(e)).toList();
@@ -35,7 +42,7 @@ class ContaController extends ChangeNotifier {
     var contaRepository = ContaRepository();
     try {
       final response = await contaRepository.save(
-          BackRoutes.baseUrl + BackRoutes.CATEGORIA_SAVE, conta);
+          BackRoutes.baseUrl + BackRoutes.CONTA_SAVE, conta);
       if (response != null) {
         Conta conta = Conta.fromMap(response as Map<String, dynamic>);
         contas.add(conta);
@@ -47,50 +54,67 @@ class ContaController extends ChangeNotifier {
 
   create(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    final categoriaController = TextEditingController();
-    final tipoController = TextEditingController();
-    final dataController = TextEditingController();
-    final descricaoController = TextEditingController();
-    final valorController = TextEditingController();
-    final destinoOrigemController = TextEditingController();
-    final statusController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Nova Conta'),
+        title: const Text('Nova Conta'),
         content: Form(
           key: formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              FutureBuilder<List<Categoria>?>(
+                  future:
+                      Provider.of<CategoriaController>(context, listen: false)
+                          .findAll(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      var categorias = snapshot.data!;
+                      return DropdownButtonFormField(
+                        items: Provider.of<CategoriaController>(context,
+                                listen: false)
+                            .categorias
+                            .map(
+                              (e) => DropdownMenuItem<Categoria>(
+                                value: e,
+                                child: Text(e.nome),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          categoriaSelecionada = value;
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Categoria',
+                        ),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Campo Obrigatório';
+                          }
+                          return null;
+                        },
+                      );
+                    }
+                    return const CircularProgressIndicator();
+                  }),
               DropdownButtonFormField(
-                items: Provider.of<CategoriaController>(context, listen: false)
-                    .categorias
-                    .map(
-                      (e) => DropdownMenuItem<Categoria>(
-                        child: Text(e.nome),
-                      ),
-                    )
-                    .toList(),
+                items: const [
+                  DropdownMenuItem<String>(
+                    value: 'Despesa',
+                    child: Text('Despesa'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'Receita',
+                    child: Text('Receita'),
+                  ),
+                ],
                 onChanged: (value) {
-                  categoriaSelecionada = value;
+                  tipoSelecionado = value ?? 'Despesa';
                 },
-              ),
-              TextFormField(
-                controller: dataController,
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Campo obrigatório';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: descricaoController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Campo obrigatório';
+                  if (value == null) {
+                    return 'Campo Obrigatório';
                   }
                   return null;
                 },
@@ -103,13 +127,13 @@ class ContaController extends ChangeNotifier {
               onPressed: () async {
                 if (formKey.currentState?.validate() ?? false) {
                   var conta = Conta(
-                    categoria: categoriaSelecionada,
-                    tipo: tipoSelecionado,
+                    categoria: categoriaSelecionada!,
+                    tipo: tipoSelecionado == 'Despesa' ? true : false,
                     data: dataController.text,
                     descricao: descricaoController.text,
                     valor: double.parse(valorController.text),
                     destinoOrigem: destinoOrigemController.text,
-                    status: statusSelecionado,
+                    status: false,
                   );
                   await save(conta);
                   Navigator.of(context).pop();
@@ -168,7 +192,7 @@ class ContaController extends ChangeNotifier {
     var contaRepository = ContaRepository();
     try {
       final response = await contaRepository.delete(
-          BackRoutes.baseUrl + BackRoutes.CATEGORIA_DELETE, data);
+          BackRoutes.baseUrl + BackRoutes.CONTA_DELETE, data);
       if (response != null) {
         contas.remove(data);
         notifyListeners();
@@ -182,7 +206,7 @@ class ContaController extends ChangeNotifier {
     var contaRepository = ContaRepository();
     try {
       final response = await contaRepository.update(
-          BackRoutes.baseUrl + BackRoutes.CATEGORIA_UPDATE, conta);
+          BackRoutes.baseUrl + BackRoutes.CONTA_UPDATE, conta);
       if (response != null) {
         Conta contaEdit = Conta.fromMap(response as Map<String, dynamic>);
         contas.add(contaEdit);

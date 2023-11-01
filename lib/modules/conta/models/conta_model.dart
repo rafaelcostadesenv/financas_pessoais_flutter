@@ -4,7 +4,7 @@ import 'package:financas_pessoais_flutter/modules/abstract/models/abstract_entit
 import 'package:financas_pessoais_flutter/modules/categoria/models/categoria_model.dart';
 
 class Conta extends AbstractEntity {
-  Categoria? categoria;
+  Categoria categoria;
   bool? tipo;
   String data;
   String descricao;
@@ -13,7 +13,7 @@ class Conta extends AbstractEntity {
   bool? status;
 
   Conta({
-    this.categoria,
+    required this.categoria,
     this.tipo,
     required this.data,
     required this.descricao,
@@ -25,7 +25,13 @@ class Conta extends AbstractEntity {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      // 'categoria'.categoria.toMap();
+      'categoria': categoria.toMap(),
+      'tipo': tipo,
+      'data': data,
+      'descricao': descricao,
+      'valor': valor,
+      'destinoOrigem': destinoOrigem,
+      'status': status,
     };
   }
 

@@ -11,7 +11,9 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          // create: (context) => CategoriaController(),
+          create: (context) => CategoriaController(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => ContaController(),
         )
       ],
