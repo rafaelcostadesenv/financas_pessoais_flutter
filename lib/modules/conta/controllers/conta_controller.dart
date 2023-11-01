@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:financas_pessoais_flutter/modules/categoria/controllers/categoria_controller.dart';
 import 'package:financas_pessoais_flutter/modules/categoria/models/categoria_model.dart';
 import 'package:financas_pessoais_flutter/modules/conta/models/conta_model.dart';
 import 'package:financas_pessoais_flutter/modules/conta/repositiry/conta_repository.dart';
 import 'package:financas_pessoais_flutter/utils/back_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ContaController extends ChangeNotifier {
@@ -129,6 +131,10 @@ class ContaController extends ChangeNotifier {
                   decoration: const InputDecoration(
                     hintText: 'Data',
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    DataInputFormatter(),
+                  ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Campo obrigatório';
@@ -153,6 +159,10 @@ class ContaController extends ChangeNotifier {
                   decoration: const InputDecoration(
                     hintText: 'Valor',
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CentavosInputFormatter(moeda: true),
+                  ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Campo obrigatório';
@@ -185,7 +195,8 @@ class ContaController extends ChangeNotifier {
                     tipo: tipoSelecionado == 'Despesa' ? true : false,
                     data: dataController.text,
                     descricao: descricaoController.text,
-                    valor: double.parse(valorController.text),
+                    valor: UtilBrasilFields.converterMoedaParaDouble(
+                        (valorController.text)),
                     destinoOrigem: destinoOrigemController.text,
                     status: false,
                   );
