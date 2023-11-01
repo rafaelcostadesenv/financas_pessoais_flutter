@@ -37,7 +37,7 @@ class Conta extends AbstractEntity {
 
   factory Conta.fromMap(Map<String, dynamic> map) {
     return Conta(
-      categoria: map['categoria'] as Categoria,
+      categoria: Categoria.fromMap(map['categoria'] as Map<String, dynamic>),
       tipo: map['tipo'] as bool,
       data: map['data'] as String,
       descricao: map['descricao'] as String,

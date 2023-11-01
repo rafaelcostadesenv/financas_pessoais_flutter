@@ -1,5 +1,4 @@
 import 'package:financas_pessoais_flutter/modules/categoria/controllers/categoria_controller.dart';
-import 'package:financas_pessoais_flutter/modules/categoria/pages/categoria_list_page.dart';
 import 'package:financas_pessoais_flutter/modules/conta/controllers/conta_controller.dart';
 import 'package:financas_pessoais_flutter/modules/conta/pages/conta_list_page.dart';
 import 'package:financas_pessoais_flutter/theme/my_theme.dart';

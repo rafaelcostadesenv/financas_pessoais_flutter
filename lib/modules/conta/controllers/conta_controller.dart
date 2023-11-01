@@ -61,10 +61,11 @@ class ContaController extends ChangeNotifier {
         title: const Text('Nova Conta'),
         content: Form(
           key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FutureBuilder<List<Categoria>?>(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FutureBuilder<List<Categoria>?>(
                   future:
                       Provider.of<CategoriaController>(context, listen: false)
                           .findAll(),
@@ -97,29 +98,82 @@ class ContaController extends ChangeNotifier {
                       );
                     }
                     return const CircularProgressIndicator();
-                  }),
-              DropdownButtonFormField(
-                items: const [
-                  DropdownMenuItem<String>(
-                    value: 'Despesa',
-                    child: Text('Despesa'),
+                  },
+                ),
+                DropdownButtonFormField(
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: 'Despesa',
+                      child: Text('Despesa'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'Receita',
+                      child: Text('Receita'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    tipoSelecionado = value ?? 'Despesa';
+                  },
+                  decoration: const InputDecoration(
+                    hintText: 'Tipo',
                   ),
-                  DropdownMenuItem<String>(
-                    value: 'Receita',
-                    child: Text('Receita'),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Campo Obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: dataController,
+                  decoration: const InputDecoration(
+                    hintText: 'Data',
                   ),
-                ],
-                onChanged: (value) {
-                  tipoSelecionado = value ?? 'Despesa';
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Campo Obrigatório';
-                  }
-                  return null;
-                },
-              ),
-            ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: descricaoController,
+                  decoration: const InputDecoration(
+                    hintText: 'Descrição',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: valorController,
+                  decoration: const InputDecoration(
+                    hintText: 'Valor',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: destinoOrigemController,
+                  decoration: const InputDecoration(
+                    hintText: 'Destino / Origem',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
