@@ -6,6 +6,7 @@ import 'package:financas_pessoais_flutter/modules/conta/models/conta_model.dart'
 import 'package:financas_pessoais_flutter/modules/conta/repositiry/conta_repository.dart';
 import 'package:financas_pessoais_flutter/utils/back_routes.dart';
 import 'package:financas_pessoais_flutter/utils/utils.dart';
+import 'package:financas_pessoais_flutter/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -137,12 +138,10 @@ class ContaController extends ChangeNotifier {
                     FilteringTextInputFormatter.digitsOnly,
                     DataInputFormatter(),
                   ],
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo obrigatório';
-                    }
-                    return null;
-                  },
+                  validator: Validatorless.multiple([
+                    Validatorless.required("Campo obrigatório"),
+                    Validators.date("Data inválida"),
+                  ]),
                 ),
                 TextFormField(
                   controller: descricaoController,
@@ -157,24 +156,19 @@ class ContaController extends ChangeNotifier {
                   },
                 ),
                 TextFormField(
-                  controller: valorController,
-                  decoration: const InputDecoration(
-                    hintText: 'Valor',
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    CentavosInputFormatter(moeda: true),
-                  ],
-                  // validator: (value) {
-                  //   if (value == null || value.isEmpty) {
-                  //     return 'Valor inválido';
-                  //   }
-                  //   return null;
-                  // },
-                  validator: Validatorless.multiple([
-                    Validatorless.required("Campo obrigatório"),
-                  ]),
-                ),
+                    controller: valorController,
+                    decoration: const InputDecoration(
+                      hintText: 'Valor',
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      CentavosInputFormatter(moeda: true),
+                    ],
+                    validator: Validatorless.multiple([
+                      Validatorless.required("Campo obrigatório"),
+                      Validators.minDouble(0.01, "Valor inválido"),
+                    ]),
+                    ''),
                 TextFormField(
                   controller: destinoOrigemController,
                   decoration: const InputDecoration(
