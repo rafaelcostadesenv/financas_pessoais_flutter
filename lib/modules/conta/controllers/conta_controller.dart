@@ -5,9 +5,11 @@ import 'package:financas_pessoais_flutter/modules/categoria/models/categoria_mod
 import 'package:financas_pessoais_flutter/modules/conta/models/conta_model.dart';
 import 'package:financas_pessoais_flutter/modules/conta/repositiry/conta_repository.dart';
 import 'package:financas_pessoais_flutter/utils/back_routes.dart';
+import 'package:financas_pessoais_flutter/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:validatorless/validatorless.dart';
 
 class ContaController extends ChangeNotifier {
   List<Conta> contas = [];
@@ -163,12 +165,15 @@ class ContaController extends ChangeNotifier {
                     FilteringTextInputFormatter.digitsOnly,
                     CentavosInputFormatter(moeda: true),
                   ],
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo obrigatório';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null || value.isEmpty) {
+                  //     return 'Valor inválido';
+                  //   }
+                  //   return null;
+                  // },
+                  validator: Validatorless.multiple([
+                    Validatorless.required("Campo obrigatório"),
+                  ]),
                 ),
                 TextFormField(
                   controller: destinoOrigemController,
@@ -193,7 +198,7 @@ class ContaController extends ChangeNotifier {
                   var conta = Conta(
                     categoria: categoriaSelecionada!,
                     tipo: tipoSelecionado == 'Despesa' ? true : false,
-                    data: dataController.text,
+                    data: Utils.convertDate(dataController.text),
                     descricao: descricaoController.text,
                     valor: UtilBrasilFields.converterMoedaParaDouble(
                         (valorController.text)),
