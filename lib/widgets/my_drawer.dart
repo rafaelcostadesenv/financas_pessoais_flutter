@@ -12,6 +12,7 @@ class MyDrawer extends StatelessWidget {
       child: ListView(
         children: [
           const UserAccountsDrawerHeader(
+            // decoration: BoxDecoration(color: Colors.greenAccent),
             accountName: Text("Arley Martini"),
             accountEmail: Text("arley.assis.03@gmail.com"),
             currentAccountPicture: CircleAvatar(

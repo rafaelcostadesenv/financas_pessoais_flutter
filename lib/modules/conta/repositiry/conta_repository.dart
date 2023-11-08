@@ -31,6 +31,16 @@ class ContaRepository implements HttpService {
   }
 
   @override
+  Future<dynamic> getResumo(String url) async {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Falha na requisição...');
+    }
+  }
+
+  @override
   Future<dynamic> save(String url, AbstractEntity entity) async {
     final response = await http.post(
       Uri.parse(url),

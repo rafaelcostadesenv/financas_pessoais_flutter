@@ -4,6 +4,7 @@ import 'package:financas_pessoais_flutter/modules/categoria/controllers/categori
 import 'package:financas_pessoais_flutter/modules/categoria/models/categoria_model.dart';
 import 'package:financas_pessoais_flutter/modules/conta/models/conta_model.dart';
 import 'package:financas_pessoais_flutter/modules/conta/repositiry/conta_repository.dart';
+import 'package:financas_pessoais_flutter/modules/home/models/resumo_DTO.dart';
 import 'package:financas_pessoais_flutter/utils/back_routes.dart';
 import 'package:financas_pessoais_flutter/utils/utils.dart';
 import 'package:financas_pessoais_flutter/utils/validators.dart';
@@ -36,6 +37,20 @@ class ContaController extends ChangeNotifier {
 
         contas = lista;
         return contas;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  Future<ResumoDTO?> resumo() async {
+    var contaRepository = ContaRepository();
+    try {
+      final response = await contaRepository
+          .getResumo(BackRoutes.baseUrl + BackRoutes.CONTA_RESUMO);
+      if (response != null) {
+        return ResumoDTO.fromMap(response);
       }
     } catch (e) {
       log(e.toString());
