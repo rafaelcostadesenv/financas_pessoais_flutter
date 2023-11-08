@@ -2,6 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:financas_pessoais_flutter/modules/conta/controllers/conta_controller.dart';
 import 'package:financas_pessoais_flutter/modules/conta/models/conta_model.dart';
 import 'package:financas_pessoais_flutter/utils/utils.dart';
+import 'package:financas_pessoais_flutter/widgets/my_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ class ContaListPage extends StatelessWidget {
     // final controller = context.read<ContaController>();
 
     return Scaffold(
+      drawer: const MyDrawer(),
       appBar: AppBar(
         title: const Text('Contas'),
       ),

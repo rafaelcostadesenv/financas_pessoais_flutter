@@ -1,7 +1,10 @@
 import 'package:financas_pessoais_flutter/modules/categoria/controllers/categoria_controller.dart';
+import 'package:financas_pessoais_flutter/modules/categoria/pages/categoria_list_page.dart';
 import 'package:financas_pessoais_flutter/modules/conta/controllers/conta_controller.dart';
 import 'package:financas_pessoais_flutter/modules/conta/pages/conta_list_page.dart';
+import 'package:financas_pessoais_flutter/modules/home/pages/home_page.dart';
 import 'package:financas_pessoais_flutter/theme/my_theme.dart';
+import 'package:financas_pessoais_flutter/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,13 +30,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Finanças Pessoais',
       debugShowCheckedModeBanner: false,
       theme: MyTheme.lightTheme,
       darkTheme: MyTheme.darkTheme,
       themeMode: ThemeMode.system,
-      // home: CategoriaListPage(),
-      home: ContaListPage(),
+      home: const HomePage(),
+      routes: {
+        AppRoutes.HOME: (context) => const HomePage(),
+        AppRoutes.CONTA_PAGE: (context) => const ContaListPage(),
+        AppRoutes.CATEGORIA_PAGE: (context) => CategoriaListPage(),
+      },
     );
   }
 }

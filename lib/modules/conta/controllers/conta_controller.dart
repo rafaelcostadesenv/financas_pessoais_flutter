@@ -156,19 +156,19 @@ class ContaController extends ChangeNotifier {
                   },
                 ),
                 TextFormField(
-                    controller: valorController,
-                    decoration: const InputDecoration(
-                      hintText: 'Valor',
-                    ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      CentavosInputFormatter(moeda: true),
-                    ],
-                    validator: Validatorless.multiple([
-                      Validatorless.required("Campo obrigatório"),
-                      Validators.minDouble(0.01, "Valor inválido"),
-                    ]),
-                    ''),
+                  controller: valorController,
+                  decoration: const InputDecoration(
+                    hintText: 'Valor',
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CentavosInputFormatter(moeda: true),
+                  ],
+                  validator: Validatorless.multiple([
+                    Validatorless.required("Campo obrigatório"),
+                    Validators.minDouble(0.01, "Valor inválido"),
+                  ]),
+                ),
                 TextFormField(
                   controller: destinoOrigemController,
                   decoration: const InputDecoration(
