@@ -43,7 +43,8 @@ class CategoriaListPage extends StatelessWidget {
                             ),
                           ),
                           IconButton(
-                            onPressed: () => controller.delete(data[index]),
+                            onPressed: () =>
+                                controller.delete(context, data[index]),
                             icon: const Icon(
                               Icons.delete,
                               color: Colors.red,

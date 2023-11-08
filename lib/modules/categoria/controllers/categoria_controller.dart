@@ -122,7 +122,7 @@ class CategoriaController extends ChangeNotifier {
     );
   }
 
-  delete(Categoria data) async {
+  delete(BuildContext context, Categoria data) async {
     var categoriaRepository = CategoriaRepository();
     try {
       final response = await categoriaRepository.delete(
@@ -132,6 +132,9 @@ class CategoriaController extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
       log(e.toString());
     }
   }
