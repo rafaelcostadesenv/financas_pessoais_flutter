@@ -44,6 +44,9 @@ class Conta extends AbstractEntity {
       valor: map['valor'] as double,
       destinoOrigem: map['destinoOrigem'] as String,
       status: map['status'] as bool,
-    )..id = map['id'] as int;
+    )
+      ..id = map['id'] as int
+      ..createdAt = map['createdAt'] as String
+      ..updatedAt = map['updatedAt'] as String;
   }
 }

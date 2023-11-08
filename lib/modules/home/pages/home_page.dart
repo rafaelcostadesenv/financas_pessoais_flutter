@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
                       ),
                       PieChartSectionData(
                         color: Colors.greenAccent,
-                        value: 30.000,
+                        value: 40.000,
                         showTitle: true,
                         title: 'Receita',
                         titleStyle: const TextStyle(
@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'R\$ 58.000,00',
+                    'R\$ 108.000,00',
                     style: TextStyle(
                       fontSize: 28,
                     ),

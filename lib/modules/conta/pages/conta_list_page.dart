@@ -34,7 +34,9 @@ class ContaListPage extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     margin: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: data[index].tipo == true
+                            ? Color.fromARGB(128, 255, 64, 128)
+                            : Color.fromARGB(128, 105, 240, 175),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: const [
                           BoxShadow(
