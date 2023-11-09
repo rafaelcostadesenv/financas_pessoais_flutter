@@ -30,77 +30,83 @@ class ContaListPage extends StatelessWidget {
                 List<Conta> data = snapshot.data!;
                 return ListView.builder(
                   itemCount: data.length,
-                  itemBuilder: (ctx, index) => Container(
-                    padding: const EdgeInsets.all(8),
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: data[index].tipo == true
-                            ? Color.fromARGB(128, 255, 64, 128)
-                            : Color.fromARGB(128, 105, 240, 175),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 16,
+                  itemBuilder: (ctx, index) => InkWell(
+                    onLongPress: () => context
+                        .read<ContaController>()
+                        .edit(context, data[index]),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: data[index].tipo == true
+                              ? Color.fromARGB(128, 255, 64, 128)
+                              : Color.fromARGB(128, 105, 240, 175),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 16,
+                            ),
+                          ]),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Descrição',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                              ),
+                              Text(data[index].descricao),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Data',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                              ),
+                              Text(Utils.convertDate(data[index].data)),
+                            ],
                           ),
-                        ]),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Descrição',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                            ),
-                            Text(data[index].descricao),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Data',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                            ),
-                            Text(Utils.convertDate(data[index].data)),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              'Lançamento',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                            ),
-                            Text(data[index].createdAt == null
-                                ? ''
-                                : Utils.convertDate(data[index].createdAt!)),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Valor',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                            ),
-                            Text(UtilBrasilFields.obterReal(data[index].valor)),
-                          ],
-                        ),
-                      ],
+                          Column(
+                            children: [
+                              Text(
+                                'Lançamento',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                              ),
+                              Text(data[index].createdAt == null
+                                  ? ''
+                                  : Utils.convertDate(data[index].createdAt!)),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Valor',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                              ),
+                              Text(UtilBrasilFields.obterReal(
+                                  data[index].valor)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   // Card(

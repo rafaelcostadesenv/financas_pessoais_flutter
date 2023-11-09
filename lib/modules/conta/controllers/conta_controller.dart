@@ -17,7 +17,7 @@ class ContaController extends ChangeNotifier {
   List<Conta> contas = [];
   Categoria? categoriaSelecionada;
   String tipoSelecionado = 'Despesa';
-  String statusSelecionado = 'TipoConta';
+  String statusSelecionado = 'Pendente';
   final categoriaController = TextEditingController();
   final tipoController = TextEditingController();
   final dataController = TextEditingController();
@@ -229,33 +229,156 @@ class ContaController extends ChangeNotifier {
   edit(BuildContext context, Conta data) {
     final formKey = GlobalKey<FormState>();
     final dataController = TextEditingController(text: data.data);
+    categoriaSelecionada = data.categoria;
+    tipoSelecionado = data.tipo == true ? 'Despesa' : 'Receita';
+    dataController.text = Utils.convertDate(data.data);
+    descricaoController.text = data.descricao;
+    valorController.text = data.valor.toString();
+    destinoOrigemController.text = data.destinoOrigem.toString();
+    statusSelecionado = data.status == true ? 'Pedente' : 'Pago';
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Editar Conta'),
         content: Form(
           key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: dataController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Campo obrigatório';
-                  }
-                  return null;
-                },
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FutureBuilder<List<Categoria>?>(
+                  future:
+                      Provider.of<CategoriaController>(context, listen: false)
+                          .findAll(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      var categorias = snapshot.data!;
+                      return DropdownButtonFormField(
+                        // value: categoriaSelecionada,
+                        items: Provider.of<CategoriaController>(context,
+                                listen: false)
+                            .categorias
+                            .map(
+                              (e) => DropdownMenuItem<Categoria>(
+                                value: e,
+                                child: Text(e.nome),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          categoriaSelecionada = value;
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Categoria',
+                        ),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Campo Obrigatório';
+                          }
+                          return null;
+                        },
+                      );
+                    }
+                    return const CircularProgressIndicator();
+                  },
+                ),
+                DropdownButtonFormField(
+                  value: tipoSelecionado,
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: 'Despesa',
+                      child: Text('Despesa'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'Receita',
+                      child: Text('Receita'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    tipoSelecionado = value ?? 'Despesa';
+                  },
+                  decoration: const InputDecoration(
+                    hintText: 'Tipo',
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Campo Obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: dataController,
+                  decoration: const InputDecoration(
+                    hintText: 'Data',
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    DataInputFormatter(),
+                  ],
+                  validator: Validatorless.multiple([
+                    Validatorless.required("Campo obrigatório"),
+                    Validators.date("Data inválida"),
+                  ]),
+                ),
+                TextFormField(
+                  controller: descricaoController,
+                  decoration: const InputDecoration(
+                    hintText: 'Descrição',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: valorController,
+                  decoration: const InputDecoration(
+                    hintText: 'Valor',
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CentavosInputFormatter(moeda: true),
+                  ],
+                  validator: Validatorless.multiple([
+                    Validatorless.required("Campo obrigatório"),
+                    Validators.minDouble(0.01, "Valor inválido"),
+                  ]),
+                ),
+                TextFormField(
+                  controller: destinoOrigemController,
+                  decoration: const InputDecoration(
+                    hintText: 'Destino / Origem',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
           ElevatedButton.icon(
               onPressed: () async {
                 if (formKey.currentState?.validate() ?? false) {
-                  data.data = dataController.text;
-                  await update(data);
+                  var conta = Conta(
+                    categoria: categoriaSelecionada!,
+                    tipo: tipoSelecionado == 'Despesa' ? true : false,
+                    data: Utils.convertDate(dataController.text),
+                    descricao: descricaoController.text,
+                    valor: UtilBrasilFields.converterMoedaParaDouble(
+                        (valorController.text)),
+                    destinoOrigem: destinoOrigemController.text,
+                    status: false,
+                  );
+                  await save(conta);
                   Navigator.of(context).pop();
                   notifyListeners();
                 }
