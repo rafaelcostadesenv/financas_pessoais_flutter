@@ -13,10 +13,10 @@ class MyDrawer extends StatelessWidget {
         children: [
           const UserAccountsDrawerHeader(
             // decoration: BoxDecoration(color: Colors.greenAccent),
-            accountName: Text("Arley Martini"),
-            accountEmail: Text("arley.assis.03@gmail.com"),
+            accountName: Text("Rafael Simão"),
+            accountEmail: Text("rafael.costa.desenv@gmail.com"),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage("assets/images/avatar.jpg"),
+              backgroundImage: AssetImage("assets/images/Avatar.jpg"),
             ),
           ),
           // ElevatedButton(

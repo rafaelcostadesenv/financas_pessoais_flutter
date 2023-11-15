@@ -10,6 +10,7 @@ import 'package:financas_pessoais_flutter/utils/utils.dart';
 import 'package:financas_pessoais_flutter/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -256,9 +257,7 @@ class ContaController extends ChangeNotifier {
                       var categorias = snapshot.data!;
                       return DropdownButtonFormField(
                         // value: categoriaSelecionada,
-                        items: Provider.of<CategoriaController>(context,
-                                listen: false)
-                            .categorias
+                        items: categorias
                             .map(
                               (e) => DropdownMenuItem<Categoria>(
                                 value: e,
@@ -269,6 +268,8 @@ class ContaController extends ChangeNotifier {
                         onChanged: (value) {
                           categoriaSelecionada = value;
                         },
+                        value: categorias.firstWhere((element) =>
+                            element.id == categoriaSelecionada?.id),
                         decoration: const InputDecoration(
                           hintText: 'Categoria',
                         ),
@@ -417,6 +418,21 @@ class ContaController extends ChangeNotifier {
       }
     } catch (e) {
       log(e.toString());
+    }
+  }
+
+  Future<void> selecionarData(BuildContext context) async {
+    final dataSelecionada = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(
+        Duration(days: 7),
+      ),
+    );
+    if (dataSelecionada != null) {
+      dataController.text = DateFormat('dd/mm/yyyy').format(dataSelecionada);
+      notifyListeners();
     }
   }
 }

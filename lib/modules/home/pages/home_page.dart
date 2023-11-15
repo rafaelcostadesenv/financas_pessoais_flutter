@@ -47,18 +47,18 @@ class HomePage extends StatelessWidget {
                             PieChartData(
                               sections: [
                                 PieChartSectionData(
-                                  color: Colors.pinkAccent,
-                                  value: data.totalDespesa,
+                                  color: const Color.fromARGB(255, 244, 1, 1),
+                                  value: 68.000,
                                   showTitle: true,
-                                  title: 'Despesas',
+                                  title: 'Despesa',
                                   titleStyle: const TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 PieChartSectionData(
-                                  color: Colors.greenAccent,
-                                  value: data.totalReceita,
+                                  color: Colors.amber,
+                                  value: 30.000,
                                   showTitle: true,
                                   title: 'Receita',
                                   titleStyle: const TextStyle(
@@ -74,13 +74,13 @@ class HomePage extends StatelessWidget {
                         ),
                         Column(
                           children: [
-                            // Text(
-                            //   'Saldo',
-                            //   style: TextStyle(
-                            //     fontSize: 20,
-                            //     color: Colors.teal,
-                            //   ),
-                            // ),
+                            const Text(
+                              'Saldo',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                            ),
                             Text(
                               UtilBrasilFields.obterReal(data.saldo),
                               style: const TextStyle(
@@ -91,36 +91,40 @@ class HomePage extends StatelessWidget {
                         )
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.greenAccent),
-                        ),
-                        const Text(' Receitas '),
-                        Text(UtilBrasilFields.obterReal(data.totalReceita)),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 50),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.red),
+                          ),
+                          const Text(' Despesa'),
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: 16,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.pinkAccent),
-                        ),
-                        const Text(' Despesas '),
-                        Text(UtilBrasilFields.obterReal(data.totalDespesa)),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 50),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.amber),
+                          ),
+                          const Text(' Receita'),
+                        ],
+                      ),
                     ),
                   ],
                 );
