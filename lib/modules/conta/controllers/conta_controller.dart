@@ -146,6 +146,10 @@ class ContaController extends ChangeNotifier {
                   },
                 ),
                 TextFormField(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    selecionarData(context);
+                  },
                   controller: dataController,
                   decoration: const InputDecoration(
                     hintText: 'Data',
@@ -310,6 +314,10 @@ class ContaController extends ChangeNotifier {
                   },
                 ),
                 TextFormField(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    selecionarData(context);
+                  },
                   controller: dataController,
                   decoration: const InputDecoration(
                     hintText: 'Data',
