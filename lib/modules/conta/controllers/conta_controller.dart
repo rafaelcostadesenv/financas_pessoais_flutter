@@ -401,7 +401,7 @@ class ContaController extends ChangeNotifier {
     );
   }
 
-  delete(Conta data) async {
+  delete(Conta data, BuildContext context) async {
     var contaRepository = ContaRepository();
     try {
       final response = await contaRepository.delete(
@@ -409,6 +409,8 @@ class ContaController extends ChangeNotifier {
       if (response != null) {
         contas.remove(data);
         notifyListeners();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Conta excluida com sucesso!')));
       }
     } catch (e) {
       log(e.toString());
