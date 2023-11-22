@@ -147,9 +147,10 @@ class ContaController extends ChangeNotifier {
                 ),
                 TextFormField(
                   onTap: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    // FocusScope.of(context).requestFocus(FocusNode());
                     selecionarData(context);
                   },
+                  readOnly: true,
                   controller: dataController,
                   decoration: const InputDecoration(
                     hintText: 'Data',
@@ -315,9 +316,10 @@ class ContaController extends ChangeNotifier {
                 ),
                 TextFormField(
                   onTap: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    // FocusScope.of(context).requestFocus(FocusNode());
                     selecionarData(context);
                   },
+                  readOnly: true,
                   controller: dataController,
                   decoration: const InputDecoration(
                     hintText: 'Data',
@@ -439,7 +441,7 @@ class ContaController extends ChangeNotifier {
       ),
     );
     if (dataSelecionada != null) {
-      dataController.text = DateFormat('dd/mm/yyyy').format(dataSelecionada);
+      dataController.text = DateFormat('dd/MM/yyyy').format(dataSelecionada);
       notifyListeners();
     }
   }
