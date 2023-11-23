@@ -11,7 +11,7 @@ class Conta {
 
   String? createdAt;
   String? updatedAt;
-  Categoria? categoria;
+  final categoria = ToOne<Categoria>();
   bool? tipo;
   String? data;
   String? descricao;
@@ -20,7 +20,7 @@ class Conta {
   bool? status;
 
   Conta({
-    this.categoria,
+    this.id,
     this.tipo,
     this.data,
     this.descricao,
@@ -29,5 +29,5 @@ class Conta {
     this.status,
     this.createdAt,
     this.updatedAt,
-  });
+  }) {}
 }

@@ -229,7 +229,6 @@ class ContaController extends ChangeNotifier {
               onPressed: () async {
                 if (formKey.currentState?.validate() ?? false) {
                   var conta = Conta(
-                    categoria: categoriaSelecionada!,
                     tipo: tipoSelecionado == 'Despesa' ? true : false,
                     data: Utils.convertDate(dataController.text),
                     descricao: descricaoController.text,
@@ -238,6 +237,7 @@ class ContaController extends ChangeNotifier {
                     destinoOrigem: destinoOrigemController.text,
                     status: false,
                   );
+                  conta.categoria.target = categoriaSelecionada!;
                   await save(conta);
                   Navigator.of(context).pop();
                   notifyListeners();
@@ -253,7 +253,7 @@ class ContaController extends ChangeNotifier {
   edit(BuildContext context, Conta data) {
     final formKey = GlobalKey<FormState>();
     final dataController = TextEditingController(text: data.data);
-    categoriaSelecionada = data.categoria;
+    categoriaSelecionada = data.categoria.target;
     tipoSelecionado = data.tipo == true ? 'Despesa' : 'Receita';
     dataController.text =
         data.data == null ? '' : Utils.convertDate(data.data!);
@@ -399,7 +399,6 @@ class ContaController extends ChangeNotifier {
               onPressed: () async {
                 if (formKey.currentState?.validate() ?? false) {
                   var conta = Conta(
-                    categoria: categoriaSelecionada!,
                     tipo: tipoSelecionado == 'Despesa' ? true : false,
                     data: Utils.convertDate(dataController.text),
                     descricao: descricaoController.text,
@@ -408,6 +407,7 @@ class ContaController extends ChangeNotifier {
                     destinoOrigem: destinoOrigemController.text,
                     status: false,
                   );
+                  conta.categoria.target = categoriaSelecionada!;
                   await save(conta);
                   Navigator.of(context).pop();
                   notifyListeners();
