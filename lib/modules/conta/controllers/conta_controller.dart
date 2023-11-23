@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:financas_pessoais_flutter/database/objectbox.g.dart';
+import 'package:financas_pessoais_flutter/database/objectbox_database.dart';
 import 'package:financas_pessoais_flutter/modules/categoria/controllers/categoria_controller.dart';
 import 'package:financas_pessoais_flutter/modules/categoria/models/categoria_model.dart';
 import 'package:financas_pessoais_flutter/modules/conta/models/conta_model.dart';
@@ -11,6 +13,7 @@ import 'package:financas_pessoais_flutter/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -27,18 +30,18 @@ class ContaController extends ChangeNotifier {
   final destinoOrigemController = TextEditingController();
   final statusController = TextEditingController();
 
-  Future<List<Conta>?> findAll() async {
-    var contaRepository = ContaRepository();
-    try {
-      final response = await contaRepository
-          .getAll(BackRoutes.baseUrl + BackRoutes.CONTA_ALL);
-      if (response != null) {
-        List<Conta> lista =
-            response.map<Conta>((e) => Conta.fromMap(e)).toList();
+  Future<Box<Conta>> getBox() async {
+    final store = await ObjectBoxDataBase.getStore();
 
-        contas = lista;
-        return contas;
-      }
+    return store.box<Conta>();
+  }
+
+  Future<List<Conta>?> findAll() async {
+    try {
+      final box = await getBox();
+      contas = box.getAll();
+
+      return contas;
     } catch (e) {
       log(e.toString());
     }
@@ -46,28 +49,43 @@ class ContaController extends ChangeNotifier {
   }
 
   Future<ResumoDTO?> resumo() async {
-    var contaRepository = ContaRepository();
-    try {
-      final response = await contaRepository
-          .getResumo(BackRoutes.baseUrl + BackRoutes.CONTA_RESUMO);
-      if (response != null) {
-        return ResumoDTO.fromMap(response);
-      }
-    } catch (e) {
-      log(e.toString());
-    }
-    return null;
+    final box = await getBox();
+
+    final queryDespesa =
+        box.query(Conta_.tipo.equals(true)).order(Conta_.id).build();
+
+    final queryReceita =
+        box.query(Conta_.tipo.equals(false)).order(Conta_.id).build();
+
+    final contasDespesas = queryDespesa.find();
+    final contasReceitas = queryReceita.find();
+
+    queryDespesa.close();
+    queryReceita.close();
+
+    double totalDespesa = 0.0;
+    double totalReceita = 0.0;
+    double saldo = 0.0;
+
+    contasDespesas.forEach((element) {
+      totalDespesa += element.valor ?? 0.0;
+    });
+
+    contasReceitas.forEach((element) {
+      totalReceita += element.valor ?? 0.0;
+    });
+
+    saldo = totalReceita - totalDespesa;
+
+    return ResumoDTO(
+        totalReceita: totalReceita, totalDespesa: totalDespesa, saldo: saldo);
   }
 
   Future<void> save(Conta conta) async {
-    var contaRepository = ContaRepository();
     try {
-      final response = await contaRepository.save(
-          BackRoutes.baseUrl + BackRoutes.CONTA_SAVE, conta);
-      if (response != null) {
-        Conta conta = Conta.fromMap(response as Map<String, dynamic>);
-        contas.add(conta);
-      }
+      final box = await getBox();
+      box.put(conta);
+      contas.add(conta);
     } catch (e) {
       log(e.toString());
     }
@@ -100,7 +118,7 @@ class ContaController extends ChangeNotifier {
                             .map(
                               (e) => DropdownMenuItem<Categoria>(
                                 value: e,
-                                child: Text(e.nome),
+                                child: Text(e.nome ?? '-'),
                               ),
                             )
                             .toList(),
@@ -237,9 +255,10 @@ class ContaController extends ChangeNotifier {
     final dataController = TextEditingController(text: data.data);
     categoriaSelecionada = data.categoria;
     tipoSelecionado = data.tipo == true ? 'Despesa' : 'Receita';
-    dataController.text = Utils.convertDate(data.data);
-    descricaoController.text = data.descricao;
-    valorController.text = data.valor.toString();
+    dataController.text =
+        data.data == null ? '' : Utils.convertDate(data.data!);
+    descricaoController.text = data.descricao ?? '';
+    valorController.text = data.valor == null ? '' : data.valor.toString();
     destinoOrigemController.text = data.destinoOrigem.toString();
     statusSelecionado = data.status == true ? 'Pedente' : 'Pago';
 
@@ -266,7 +285,7 @@ class ContaController extends ChangeNotifier {
                             .map(
                               (e) => DropdownMenuItem<Categoria>(
                                 value: e,
-                                child: Text(e.nome),
+                                child: Text(e.nome ?? '-'),
                               ),
                             )
                             .toList(),
@@ -402,32 +421,20 @@ class ContaController extends ChangeNotifier {
   }
 
   delete(Conta data, BuildContext context) async {
-    var contaRepository = ContaRepository();
     try {
-      final response = await contaRepository.delete(
-          BackRoutes.baseUrl + BackRoutes.CONTA_DELETE, data);
-      if (response != null) {
-        contas.remove(data);
-        notifyListeners();
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Conta excluida com sucesso!')));
-      }
+      final box = await getBox();
+      box.remove(data.id!);
+      contas.remove(data);
     } catch (e) {
       log(e.toString());
     }
   }
 
   Future<void> update(Conta conta) async {
-    var contaRepository = ContaRepository();
     try {
-      final response = await contaRepository.update(
-          BackRoutes.baseUrl + BackRoutes.CONTA_UPDATE, conta);
-      if (response != null) {
-        Conta contaEdit = Conta.fromMap(response as Map<String, dynamic>);
-        contas.add(contaEdit);
-        contas.remove(conta);
-        notifyListeners();
-      }
+      final box = await getBox();
+      box.put(conta);
+      contas.add(conta);
     } catch (e) {
       log(e.toString());
     }

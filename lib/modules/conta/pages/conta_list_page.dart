@@ -66,7 +66,7 @@ class ContaListPage extends StatelessWidget {
                                       fontWeight: FontWeight.w800,
                                     ),
                               ),
-                              Text(data[index].descricao),
+                              Text(data[index].descricao ?? '-'),
                               const SizedBox(height: 8),
                               Text(
                                 'Data',
@@ -77,7 +77,9 @@ class ContaListPage extends StatelessWidget {
                                       fontWeight: FontWeight.w800,
                                     ),
                               ),
-                              Text(Utils.convertDate(data[index].data)),
+                              Text(data[index].data == null
+                                  ? '-'
+                                  : Utils.convertDate(data[index].data!)),
                             ],
                           ),
                           Column(
@@ -104,8 +106,10 @@ class ContaListPage extends StatelessWidget {
                                       fontWeight: FontWeight.w800,
                                     ),
                               ),
-                              Text(UtilBrasilFields.obterReal(
-                                  data[index].valor)),
+                              Text(data[index].data == null
+                                  ? '-'
+                                  : UtilBrasilFields.obterReal(
+                                      data[index].valor!)),
                             ],
                           ),
                         ],

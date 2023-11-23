@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
                               sections: [
                                 PieChartSectionData(
                                   color: const Color.fromARGB(255, 244, 1, 1),
-                                  value: 68.000,
+                                  value: data.totalDespesa,
                                   showTitle: true,
                                   title: 'Despesa',
                                   titleStyle: const TextStyle(
@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
                                 ),
                                 PieChartSectionData(
                                   color: Colors.amber,
-                                  value: 30.000,
+                                  value: data.totalReceita,
                                   showTitle: true,
                                   title: 'Receita',
                                   titleStyle: const TextStyle(

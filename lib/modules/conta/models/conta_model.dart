@@ -2,51 +2,32 @@ import 'dart:ffi';
 
 import 'package:financas_pessoais_flutter/modules/abstract/models/abstract_entity_model.dart';
 import 'package:financas_pessoais_flutter/modules/categoria/models/categoria_model.dart';
+import 'package:objectbox/objectbox.dart';
 
-class Conta extends AbstractEntity {
-  Categoria categoria;
+@Entity()
+class Conta {
+  @Id()
+  int? id;
+
+  String? createdAt;
+  String? updatedAt;
+  Categoria? categoria;
   bool? tipo;
-  String data;
-  String descricao;
-  double valor;
+  String? data;
+  String? descricao;
+  double? valor;
   String? destinoOrigem;
   bool? status;
 
   Conta({
-    required this.categoria,
+    this.categoria,
     this.tipo,
-    required this.data,
-    required this.descricao,
-    required this.valor,
+    this.data,
+    this.descricao,
+    this.valor,
     this.destinoOrigem,
     this.status,
+    this.createdAt,
+    this.updatedAt,
   });
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'categoria': categoria.toMap(),
-      'tipo': tipo,
-      'data': data,
-      'descricao': descricao,
-      'valor': valor,
-      'destinoOrigem': destinoOrigem,
-      'status': status,
-    };
-  }
-
-  factory Conta.fromMap(Map<String, dynamic> map) {
-    return Conta(
-      categoria: Categoria.fromMap(map['categoria'] as Map<String, dynamic>),
-      tipo: map['tipo'] as bool,
-      data: map['data'] as String,
-      descricao: map['descricao'] as String,
-      valor: map['valor'] as double,
-      destinoOrigem: map['destinoOrigem'] as String,
-      status: map['status'] as bool,
-    )
-      ..id = map['id'] as int
-      ..createdAt = map['createdAt'] as String
-      ..updatedAt = map['updatedAt'] as String;
-  }
 }

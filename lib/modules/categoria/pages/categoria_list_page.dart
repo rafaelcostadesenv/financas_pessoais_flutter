@@ -30,7 +30,7 @@ class CategoriaListPage extends StatelessWidget {
                   itemCount: data.length,
                   itemBuilder: (ctx, index) => Card(
                     child: ListTile(
-                      title: Text(data[index].nome),
+                      title: Text(data[index].nome ?? '-'),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
